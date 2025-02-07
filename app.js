@@ -1,11 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 const userRoutes = require("./routes/authRouter");
+const messagerouter = require("./routes/messageRouter");
+const errorPage = require("./utils/errorPage");
 
 
 
 const app = express();
-
 
 app.use(express.json());
 
@@ -20,7 +21,15 @@ app.use(cors(
 ))
 
 app.use("/api/v1/auth", userRoutes);
+app.use("/api/v1/message", messagerouter);
 
+
+
+
+
+
+
+app.use(errorPage); 
 
 module.exports = app
 
