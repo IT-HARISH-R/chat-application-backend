@@ -55,7 +55,6 @@ const userController = {
             if (!password) {
                 return res.status(400).json({ message: 'Password is required' });
             }
-
             // Compare the entered password with the hashed password
             const isMatch = await bcrypt.compare(password, user.password);
             if (!isMatch) {
