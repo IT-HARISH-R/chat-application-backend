@@ -5,26 +5,22 @@ const auth = {
     checkAuth: async (req, res, next) => {
         try {
             // Extract token from Authorization header
-            console.log("-----------------------9", req.headers)
             const authHeader = req.headers.authorization;
-            console.log("-----------------------9", req.headers.authorization)
+
             if (!authHeader || !authHeader.startsWith('Bearer ')) {
                 return res.status(401).json({ msg: 'No token, authorization denied' });
             }
-            console.log("------------------------3")
             // Get the token part of the header
             const token = authHeader.split(' ')[2]; // Extract the actual token
-            console.log("...............................", token)
             if (!token) {
                 return res.status(401).json({ msg: 'Invalid token format' });
             }
-            console.log("------------------------5")
 
             console.log("Token from Authorization header:", token);
 
             // Verify the token
             const decoded = jwt.verify(token, SECRET_KEY);
-            console.log("Decoded Token:", decoded);
+            // console.log("Decoded Token:", decoded);
 
             // Find the user by ID
             const user = await User.findById(decoded.id);
@@ -32,7 +28,7 @@ const auth = {
                 return res.status(401).json({ msg: 'User not found' });
             }
 
-            console.log("Authenticated User:", user);
+            // console.log("Authenticated User:", user);
 
             // Attach the user ID to the request object
             req.userId = decoded.id;

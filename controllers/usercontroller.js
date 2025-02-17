@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { EMAIL, PASS, SECRET_KEY } = require('../utils/config')
 const nodemailer = require('nodemailer');
+const cloudinary = require('../lib/cloudinary');
 
 
 const userController = {
@@ -133,15 +134,42 @@ const userController = {
         try {
             const userid = request.userId
             const user = await User.findById(userid);
-            console.log(user)
+            // console.log(user)
             if (!user) {
                 return response.status(404).json({ message: "user not found" });
             }
-
             response.json({ user })
         }
         catch (error) {
             response.status(500).json({ message: error.message });
+        }
+    },
+    update: async (req, res) => {
+        try {
+            console.log('----------------------1')
+            console.log('----------------------2',req.body)
+            const { profilePic } = req.body;
+            console.log('----------------------3')
+            const userId = req.userId;
+            console.log('----------------------4')
+            if (!profilePic) {
+                return res.status(400).json({ message: "Profile pic is required" });
+            }
+            console.log('----------------------5')
+            
+            const uploadResponse = await cloudinary.uploader.upload(profilePic);
+            const updatedUser = await User.findByIdAndUpdate(
+                userId,
+                { profilePic: uploadResponse.secure_url },
+                { new: true }
+            );
+            console.log('----------------------6')
+            
+            res.status(200).json(updatedUser);
+        } catch (error) {
+            console.log('----------------------end')
+            console.log("error in update profile:", error);
+            res.status(500).json({ message: "Internal server error" });
         }
     },
     getuserbyid: async (request, response) => {

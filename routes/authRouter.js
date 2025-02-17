@@ -13,6 +13,7 @@ userRoutes.post('/login', userController.login);
 // Get user profile (requires authentication)
 
 userRoutes.get('/profile',auth.checkAuth, userController.me);
+userRoutes.put('/update-profile',auth.checkAuth, userController.update);
 userRoutes.post('/getbyid',auth.checkAuth, userController.getuserbyid);
 
 userRoutes.post('/forgotpassword',userController.ForgotPassword);

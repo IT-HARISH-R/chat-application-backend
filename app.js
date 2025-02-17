@@ -8,7 +8,6 @@ const errorPage = require("./utils/errorPage");
 
 const app = express();
 
-app.use(express.json());
 
 app.use(cors(
     {
@@ -18,6 +17,15 @@ app.use(cors(
         methods: ['GET', 'POST', 'PATCH', 'DELETE', "PUT"],
     }
 ))
+
+app.use(express.json({ limit: "10mb" })); // Increase JSON payload size to 10MB
+app.use(express.urlencoded({ extended: true, limit: "10mb" })); // Increase URL-encoded payload size
+
+
+
+
+
+
 
 app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/message", messagerouter);
